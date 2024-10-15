@@ -9,14 +9,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 @Entity // JPA가 관리할 수 있는 Entity 클래스 지정
 @Getter
 @Setter
 @Table(name = "todo") // 매핑할 테이블의 이름을 지정
-@NoArgsConstructor(access = AccessLevel.PRIVATE) // 기본 생성자, private로 설정
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본 생성자, private로 설정
 public class Todo extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본가
@@ -25,7 +22,7 @@ public class Todo extends Timestamped{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     private String title;
     @Column(name = "password", nullable = false)
     private String password;
@@ -55,7 +52,7 @@ public class Todo extends Timestamped{
                 this.title,
                 this.description,
                 this.getCreatedAt(), // Timestamped 클래스에서 상속받은 createdAt, modifiedAt 반환
-                this.getModifiedAt()
+                this.getUpdatedAt()
         );
     }
 }

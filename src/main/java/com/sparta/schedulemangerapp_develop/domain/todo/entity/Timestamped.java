@@ -21,5 +21,5 @@ public abstract class Timestamped {
     @LastModifiedDate // 조회한 엔티티 값을 변경할 때 변경된 시간이 자동으로 저장
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime modifiedAt;
+    private LocalDateTime updatedAt;
 }

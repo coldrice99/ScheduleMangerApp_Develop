@@ -28,7 +28,7 @@ public class TodoController {
 
     // 전체 일정 조회
     @GetMapping
-    public ResponseEntity<List<TodoMemberDto>> getTodoList(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<List<TodoResponseDto>> getTodoList(@RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
