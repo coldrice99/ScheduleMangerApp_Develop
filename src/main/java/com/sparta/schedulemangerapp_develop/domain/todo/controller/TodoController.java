@@ -1,15 +1,13 @@
 package com.sparta.schedulemangerapp_develop.domain.todo.controller;
 
-import com.sparta.schedulemangerapp_develop.domain.todo.dto.TodoMemberDto;
 import com.sparta.schedulemangerapp_develop.domain.todo.dto.TodoRequestDto;
 import com.sparta.schedulemangerapp_develop.domain.todo.dto.TodoResponseDto;
 import com.sparta.schedulemangerapp_develop.domain.todo.service.TodoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController //  이 클래스가 컨트롤러고 리스폰스 바디를 포함하고 있다.
 @RequiredArgsConstructor // 필드 파라미터 생성자
@@ -28,8 +26,8 @@ public class TodoController {
 
     // 전체 일정 조회
     @GetMapping
-    public ResponseEntity<List<TodoResponseDto>> getTodoList(@RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<TodoResponseDto>> getTodoList(@RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(todoService.getTodoListWithPaging(page, size));

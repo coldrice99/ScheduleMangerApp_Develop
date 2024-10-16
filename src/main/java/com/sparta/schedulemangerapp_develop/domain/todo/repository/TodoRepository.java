@@ -9,6 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface TodoRepository extends JpaRepository<Todo,Long> {
-    // Pageable을 사용하여 페이징 처리
-    Page<Todo> findAllWithPaging(Pageable pageable);
+
 }

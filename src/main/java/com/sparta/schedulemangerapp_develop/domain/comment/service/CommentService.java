@@ -13,16 +13,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-    private CommentRepository commentRepository;
-    private MemberRepository memberRepository;
-    private TodoRepository todoRepository;
+    private final CommentRepository commentRepository;
+    private final MemberRepository memberRepository;
+    private final TodoRepository todoRepository;
 
     // 댓글 생성
     public CommentResponseDto createComment(CommentRequestDto commentRequestDto) {
@@ -35,15 +33,30 @@ public class CommentService {
         return comment.to();
     }
 
-    public List<CommentResponseDto> getCommentsByTodoIdWihtPaging(Long todoId, int page, int size) {
+    // 댓글 페이징 조회
+    public Page<CommentResponseDto> getCommentsByTodoIdWihtPaging(Long todoId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Comment> commentPage = commentRepository.findByTodoId(todoId, pageable);
 
-        return commentPage.getContent().stream()
-                .map(Comment::to)
-                .collect(Collectors.toList());
+        return commentPage.map(comment -> comment.to());
     }
 
+    // 댓글 수정
+    @Transactional
+    public void updateComment(Long commentId, CommentRequestDto requestDto) {
+        // 댓글 조회
+        Comment comment = findComment(commentId);
+        // 댓글 수정
+        comment.update(requestDto.getContent());
+    }
+
+    // 댓글 삭제
+    @Transactional
+    public void deleteComment(Long commentId) {
+        Comment comment = findComment(commentId);
+        // 댓글 삭제
+        commentRepository.delete(comment);
+    }
 
     private Todo findTodo(Long id) {
         return todoRepository.findById(id)
@@ -53,5 +66,10 @@ public class CommentService {
     private Member findMember(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+    }
+
+    private Comment findComment(Long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
     }
 }

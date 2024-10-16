@@ -1,3 +1,4 @@
+
 package com.sparta.schedulemangerapp_develop.domain.todo.service;
 
 import com.sparta.schedulemangerapp_develop.domain.comment.repository.CommentRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,16 +44,23 @@ public class TodoService {
 //    }
 
     // 전체 일정 페이징 조회
-    public List<TodoResponseDto> getTodoListWithPaging(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size); // 페이지 번호와 크기 설정
-        Page<Todo> todoPage = todoRepository.findAllWithPaging(pageable); // 페이징된 데이터 조회
+    public Page<TodoResponseDto> getTodoListWithPaging(int page, int size) {
+        // 수정일(updatedAt)을 기준으로 내림차순 정렬하는 Pageable 객체 생성
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
+        // 페이징된 todo 목록 조회
+        Page<Todo> todoPage = todoRepository.findAll(pageable);
 
-//        return todoPage.getContent().stream()
-//                .map(Todo::to)
-//                .collect(Collectors.toList());
         return todoPage.map(todo -> {
             long commentCount = commentRepository.countByTodoId(todo.getId());
-            return todo.to(commentCount);
+            return new TodoResponseDto(
+                    todo.getId(),
+                    todo.getMember().getId(),
+                    todo.getTitle(),
+                    todo.getDescription(),
+                    todo.getCreatedAt(),
+                    todo.getUpdatedAt(),
+                    commentCount // 댓글 개수를 추가하여 반환
+            );
         });
     }
     // 특정 일정 조회
@@ -67,9 +76,7 @@ public class TodoService {
 
         Member member = findMember(requestDto.getMemberId());
 
-        if (!Objects.equals(todo.getMember().getId(), requestDto.getMemberId())) {
-            throw new IllegalArgumentException("작성자만 수정 가능합니다.");
-        }
+        memberValidation(todo.getMember().getId(), requestDto.getMemberId());
 
         // 업데이트 후 저장
         todo.init(requestDto, member);
@@ -82,10 +89,7 @@ public class TodoService {
         Todo todo = findTodo(todoId);
         Member member = findMember(requestDto.getMemberId());
 
-        // 삭제 로직
-        if (!Objects.equals(todo.getMember().getId(), requestDto.getMemberId())) {
-            throw new IllegalArgumentException("작성자만 삭제 가능합니다.");
-        }
+        memberValidation(todo.getMember().getId(), requestDto.getMemberId());
 
         todoRepository.deleteById(todoId);
     }
@@ -98,5 +102,19 @@ public class TodoService {
     private Member findMember(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+    }
+
+    // 비밀번호 검증
+    private void passwordValidation(String password1, String password2 ) {
+        if(!password1.equals(password2)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    // 작성자 검증
+    private void memberValidation(Long id1, Long id2) {
+        if (!Objects.equals(id1, id2)) {
+            throw new IllegalArgumentException("작성자만 접근 가능합니다.");
+        }
     }
 }

@@ -1,5 +1,5 @@
 # ERD 설계
-![image](https://github.com/user-attachments/assets/3463fef3-32c0-47e5-a002-c080fa307e03)
+![img.png](img.png)
 
 # API 명세서
 
