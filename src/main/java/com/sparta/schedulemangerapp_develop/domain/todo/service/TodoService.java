@@ -1,5 +1,6 @@
 package com.sparta.schedulemangerapp_develop.domain.todo.service;
 
+import com.sparta.schedulemangerapp_develop.domain.comment.repository.CommentRepository;
 import com.sparta.schedulemangerapp_develop.domain.member.entity.Member;
 import com.sparta.schedulemangerapp_develop.domain.member.repository.MemberRepository;
 import com.sparta.schedulemangerapp_develop.domain.todo.dto.TodoMemberDto;
@@ -24,6 +25,7 @@ public class TodoService {
 
     private final TodoRepository todoRepository;
     private final MemberRepository memberRepository;
+    private final CommentRepository commentRepository;
 
     // 일정 생성
     public TodoResponseDto createTodo(TodoRequestDto todoRequestDto) {
@@ -34,19 +36,23 @@ public class TodoService {
         return todo.to();
     }
 
-    // 전체 일정 조회
-    public List<TodoResponseDto> getTodoList() {
-        return todoRepository.findAll().stream().map(Todo::to).toList(); // Todo 엔티티가 TodoResponseDto로 변환된 결과를 리스트로 반환
-    }
+//    // 전체 일정 조회
+//    public List<TodoResponseDto> getTodoList() {
+//        return todoRepository.findAll().stream().map(Todo::to).toList(); // Todo 엔티티가 TodoResponseDto로 변환된 결과를 리스트로 반환
+//    }
 
     // 전체 일정 페이징 조회
     public List<TodoResponseDto> getTodoListWithPaging(int page, int size) {
         Pageable pageable = PageRequest.of(page, size); // 페이지 번호와 크기 설정
-        Page<Todo> todoPage = todoRepository.findAll(pageable); // 페이징된 데이터 조회
+        Page<Todo> todoPage = todoRepository.findAllWithPaging(pageable); // 페이징된 데이터 조회
 
-        return todoPage.getContent().stream()
-                .map(Todo::to)
-                .collect(Collectors.toList());
+//        return todoPage.getContent().stream()
+//                .map(Todo::to)
+//                .collect(Collectors.toList());
+        return todoPage.map(todo -> {
+            long commentCount = commentRepository.countByTodoId(todo.getId());
+            return todo.to(commentCount);
+        });
     }
     // 특정 일정 조회
     public TodoResponseDto getTodo(Long todoId) {

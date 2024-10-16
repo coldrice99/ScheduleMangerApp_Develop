@@ -14,4 +14,5 @@ public class TodoResponseDto {
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private long commentCount; // 댓글 개수 필드 추가
 }

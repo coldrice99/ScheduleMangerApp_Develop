@@ -45,14 +45,15 @@ public class Todo extends Timestamped{
     }
 
     // Todo -> ResponseDto
-    public TodoResponseDto to() {
+    public TodoResponseDto to(long commentCount) {
         return new TodoResponseDto(
                 this.id,
                 this.member.getId(), // memberId 반환
                 this.title,
                 this.description,
                 this.getCreatedAt(), // Timestamped 클래스에서 상속받은 createdAt, modifiedAt 반환
-                this.getUpdatedAt()
+                this.getUpdatedAt(),
+                commentCount
         );
     }
 }
