@@ -1,15 +1,14 @@
+//Comment.java
 package com.sparta.schedulemangerapp_develop.domain.comment.entity;
 
 import com.sparta.schedulemangerapp_develop.domain.comment.dto.CommentRequestDto;
 import com.sparta.schedulemangerapp_develop.domain.comment.dto.CommentResponseDto;
 import com.sparta.schedulemangerapp_develop.domain.member.entity.Member;
-import com.sparta.schedulemangerapp_develop.domain.todo.dto.TodoRequestDto;
 import com.sparta.schedulemangerapp_develop.domain.todo.entity.Timestamped;
 import com.sparta.schedulemangerapp_develop.domain.todo.entity.Todo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 @Getter
 @NoArgsConstructor

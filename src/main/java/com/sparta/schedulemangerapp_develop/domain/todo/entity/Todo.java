@@ -1,3 +1,4 @@
+
 package com.sparta.schedulemangerapp_develop.domain.todo.entity;
 
 import com.sparta.schedulemangerapp_develop.domain.member.entity.Member;
@@ -45,6 +46,18 @@ public class Todo extends Timestamped{
     }
 
     // Todo -> ResponseDto
+    public TodoResponseDto to() {
+        return new TodoResponseDto(
+                this.id,
+                this.member.getId(), // memberId 반환
+                this.title,
+                this.description,
+                this.getCreatedAt(), // Timestamped 클래스에서 상속받은 createdAt, modifiedAt 반환
+                this.getUpdatedAt(),
+                0
+        );
+    }
+    // 오버로딩
     public TodoResponseDto to(long commentCount) {
         return new TodoResponseDto(
                 this.id,
@@ -56,4 +69,5 @@ public class Todo extends Timestamped{
                 commentCount
         );
     }
+    
 }

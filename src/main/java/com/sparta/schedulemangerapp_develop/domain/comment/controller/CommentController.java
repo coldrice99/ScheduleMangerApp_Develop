@@ -1,17 +1,15 @@
+
+// CommentController.java
 package com.sparta.schedulemangerapp_develop.domain.comment.controller;
 
 import com.sparta.schedulemangerapp_develop.domain.comment.dto.CommentRequestDto;
 import com.sparta.schedulemangerapp_develop.domain.comment.dto.CommentResponseDto;
-import com.sparta.schedulemangerapp_develop.domain.comment.entity.Comment;
-import com.sparta.schedulemangerapp_develop.domain.comment.repository.CommentRepository;
 import com.sparta.schedulemangerapp_develop.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/comments")
@@ -29,7 +27,7 @@ public class CommentController {
 
     // 특정 일정의 댓글 조회
     @GetMapping("/{todoId}")
-    public ResponseEntity<List<CommentResponseDto>> getCommentByTodoIdWithPaging(
+    public ResponseEntity<Page<CommentResponseDto>> getCommentByTodoIdWithPaging(
             @PathVariable Long todoId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -38,6 +36,13 @@ public class CommentController {
                 .body(commentService.getCommentsByTodoIdWihtPaging(todoId,page,size));
     }
 
-    //
+    // 댓글 수정
+    @PutMapping("/{commentId}")
+    public ResponseEntity<Void> updateComment(@PathVariable Long commentId,
+                                              @RequestBody CommentRequestDto requestDto) {
+        commentService.updateComment(commentId, requestDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 
 }

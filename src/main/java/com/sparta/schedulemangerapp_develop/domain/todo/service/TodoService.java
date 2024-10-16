@@ -1,3 +1,4 @@
+
 package com.sparta.schedulemangerapp_develop.domain.todo.service;
 
 import com.sparta.schedulemangerapp_develop.domain.comment.repository.CommentRepository;
@@ -42,16 +43,21 @@ public class TodoService {
 //    }
 
     // 전체 일정 페이징 조회
-    public List<TodoResponseDto> getTodoListWithPaging(int page, int size) {
+    public Page<TodoResponseDto> getTodoListWithPaging(int page, int size) {
         Pageable pageable = PageRequest.of(page, size); // 페이지 번호와 크기 설정
         Page<Todo> todoPage = todoRepository.findAllWithPaging(pageable); // 페이징된 데이터 조회
 
-//        return todoPage.getContent().stream()
-//                .map(Todo::to)
-//                .collect(Collectors.toList());
         return todoPage.map(todo -> {
             long commentCount = commentRepository.countByTodoId(todo.getId());
-            return todo.to(commentCount);
+            return new TodoResponseDto(
+                    todo.getId(),
+                    todo.getMember().getId(),
+                    todo.getTitle(),
+                    todo.getDescription(),
+                    todo.getCreatedAt(),
+                    todo.getUpdatedAt(),
+                    commentCount // 댓글 개수를 추가하여 반환
+            );
         });
     }
     // 특정 일정 조회
