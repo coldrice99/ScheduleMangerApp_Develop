@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -27,7 +29,7 @@ public class CommentService {
         // 유저 조회
         Member member = findMember(commentRequestDto.getMemberId());
         // 일정 조회
-        Todo todo = findTodo(commentRequestDto.getTodotId());
+        Todo todo = findTodo(commentRequestDto.getTodoId());
         // 댓글 생성 및 저장
         Comment comment = commentRepository.save(Comment.from(commentRequestDto,member,todo));
         return comment.to();
@@ -46,14 +48,20 @@ public class CommentService {
     public void updateComment(Long commentId, CommentRequestDto requestDto) {
         // 댓글 조회
         Comment comment = findComment(commentId);
+
+        // 작성자 검증
+        memberValidation(comment.getMember().getId(), requestDto.getMemberId());
+
         // 댓글 수정
         comment.update(requestDto.getContent());
     }
 
     // 댓글 삭제
     @Transactional
-    public void deleteComment(Long commentId) {
+    public void deleteComment(Long commentId, CommentRequestDto requestDto) {
         Comment comment = findComment(commentId);
+        // 작성자 검증
+        memberValidation(comment.getMember().getId(), requestDto.getMemberId());
         // 댓글 삭제
         commentRepository.delete(comment);
     }
@@ -71,5 +79,16 @@ public class CommentService {
     private Comment findComment(Long id) {
         return commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+    }
+
+    // 작성자 검증
+    private void memberValidation(Long MemberId, Long requestMemberId) {
+        // 디버깅 로그
+        System.out.println("Todo Member ID: " + MemberId);
+        System.out.println("Request Member ID: " + requestMemberId);
+
+        if (!MemberId.equals(requestMemberId)) {
+            throw new IllegalArgumentException("작성자만 접근 가능합니다.");
+        }
     }
 }

@@ -74,10 +74,11 @@ public class TodoService {
     public void updateTodo(Long todoId, TodoRequestDto requestDto) {
         Todo todo = findTodo(todoId);
 
-        Member member = findMember(requestDto.getMemberId());
-
         memberValidation(todo.getMember().getId(), requestDto.getMemberId());
+        passwordValidation(todo.getPassword(), requestDto.getPassword());
 
+        // 비밀번호 검증을 통과한 후에만 업데이트
+        Member member = findMember(requestDto.getMemberId());
         // 업데이트 후 저장
         todo.init(requestDto, member);
 //        todoRepository.save(todo); // 수정 내용 반영, 트랜잭션이 끝나면 자동으로 반영됨 (save() 불필요)
@@ -90,6 +91,7 @@ public class TodoService {
         Member member = findMember(requestDto.getMemberId());
 
         memberValidation(todo.getMember().getId(), requestDto.getMemberId());
+        passwordValidation(todo.getPassword(), requestDto.getPassword());
 
         todoRepository.deleteById(todoId);
     }
@@ -105,15 +107,18 @@ public class TodoService {
     }
 
     // 비밀번호 검증
-    private void passwordValidation(String password1, String password2 ) {
-        if(!password1.equals(password2)) {
+    private void passwordValidation(String storedPassword, String inputPassword ) {
+        if (storedPassword == null || inputPassword == null) {
+            throw new IllegalArgumentException("비밀번호를 입력해주세요.");
+        }
+        if(!storedPassword.equals(inputPassword)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
 
     // 작성자 검증
-    private void memberValidation(Long id1, Long id2) {
-        if (!Objects.equals(id1, id2)) {
+    private void memberValidation(Long storedMemberId, Long inputMemberId) {
+        if (!Objects.equals(storedMemberId, inputMemberId)) {
             throw new IllegalArgumentException("작성자만 접근 가능합니다.");
         }
     }

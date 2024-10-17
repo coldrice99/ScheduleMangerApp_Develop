@@ -21,6 +21,10 @@ public class CommentController {
     // 댓글 생성
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(@Valid @RequestBody CommentRequestDto commentRequestDto) {
+        // 디버깅 로그 추가
+        System.out.println("Received todoId: " + commentRequestDto.getTodoId());
+        System.out.println("Received memberId: " + commentRequestDto.getMemberId());
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(commentService.createComment(commentRequestDto));
@@ -45,5 +49,11 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    // 댓글 삭제
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId, @RequestBody CommentRequestDto requestDto) {
+        commentService.deleteComment(commentId, requestDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 }

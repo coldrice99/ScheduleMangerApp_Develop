@@ -16,5 +16,5 @@ public class CommentRequestDto {
     private Long memberId;  // 댓글 작성자 ID
 
     @NotNull(message = "Todo ID는 필수입니다.")
-    private Long todotId;   // 댓글이 달린 일정의 ID
+    private Long todoId;   // 댓글이 달린 일정의 ID
 }
