@@ -5,6 +5,7 @@ package com.sparta.schedulemangerapp_develop.domain.comment.controller;
 import com.sparta.schedulemangerapp_develop.domain.comment.dto.CommentRequestDto;
 import com.sparta.schedulemangerapp_develop.domain.comment.dto.CommentResponseDto;
 import com.sparta.schedulemangerapp_develop.domain.comment.service.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class CommentController {
 
     // 댓글 생성
     @PostMapping
-    public ResponseEntity<CommentResponseDto> createComment(@RequestBody CommentRequestDto commentRequestDto) {
+    public ResponseEntity<CommentResponseDto> createComment(@Valid @RequestBody CommentRequestDto commentRequestDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(commentService.createComment(commentRequestDto));

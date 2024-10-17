@@ -3,6 +3,7 @@ package com.sparta.schedulemangerapp_develop.domain.todo.controller;
 import com.sparta.schedulemangerapp_develop.domain.todo.dto.TodoRequestDto;
 import com.sparta.schedulemangerapp_develop.domain.todo.dto.TodoResponseDto;
 import com.sparta.schedulemangerapp_develop.domain.todo.service.TodoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class TodoController {
 
     // 일정 생성
     @PostMapping
-    public ResponseEntity<TodoResponseDto> createTodo(@RequestBody TodoRequestDto todoRequestDto) {
+    public ResponseEntity<TodoResponseDto> createTodo(@Valid @RequestBody TodoRequestDto todoRequestDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(todoService.createTodo(todoRequestDto));
