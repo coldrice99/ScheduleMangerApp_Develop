@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "11f8eeec-495a-4d58-a085-6df0556b6184",
+		"_postman_id": "25a25a76-61f3-479c-bf4c-cd01a99351e6",
 		"name": "todoApp",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21982647"
+		"_exporter_id": "38576996"
 	},
 	"item": [
 		{
@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"testuser\",\n    \"title\": \"할 일 제목\",\n    \"password\": \"1234\",\n    \"description\": \"이 할 일에 대한 설명입니다.\",\n    \"createdAt\": \"2024-10-03\"\n}\n",
+					"raw": "{\n    \"memberId\": 1,\n    \"title\": \"할 일 제목\",\n    \"password\": \"1234\",\n    \"description\": \"이 할 일에 대한 설명입니다.\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -35,12 +35,12 @@
 			"response": []
 		},
 		{
-			"name": "전체 일정 조회",
+			"name": "전체 일정 조회(페이징)",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/todo",
+					"raw": "localhost:8080/api/todo?page=1&size=10",
 					"host": [
 						"localhost"
 					],
@@ -48,26 +48,16 @@
 					"path": [
 						"api",
 						"todo"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "선택 일정 조회",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8080/api/todo/1",
-					"host": [
-						"localhost"
 					],
-					"port": "8080",
-					"path": [
-						"api",
-						"todo",
-						"1"
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
 					]
 				}
 			},
@@ -80,7 +70,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"수정된 유저\",\n    \"password\": \"1234\",\n    \"description\": \"수정된 값\",\n    \"updatedAt\": \"2024-10-04\"\n}\n",
+					"raw": "{\n    \"memberId\": 1,\n    \"password\": \"1234\",\n    \"title\" : \"수정된 값\",\n    \"description\": \"수정된 값\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -88,7 +78,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/todo/1",
+					"raw": "localhost:8080/api/todo/2",
 					"host": [
 						"localhost"
 					],
@@ -96,7 +86,7 @@
 					"path": [
 						"api",
 						"todo",
-						"1"
+						"2"
 					]
 				}
 			},
@@ -104,92 +94,6 @@
 		},
 		{
 			"name": "선택 일정 삭제",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"password\": \"1234\"\n}\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8080/api/todo/8",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"todo",
-						"8"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "일정 생성 - 도전",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"memberId\": 1,\n    \"title\": \"할 일 제목\",\n    \"password\": \"1234\",\n    \"description\": \"이 할 일에 대한 설명입니다.\",\n    \"createdAt\": \"2024-10-03\"\n}\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8080/api/todo",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"todo"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "선택 일정 수정 - 도전",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"memberId\": 1,\n    \"password\": \"1234\",\n    \"description\": \"수정된 값\",\n    \"updatedAt\": \"2024-10-04\"\n}\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8080/api/todo/1",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"todo",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "선택 일정 삭제 - 도전",
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -218,29 +122,106 @@
 			"response": []
 		},
 		{
-			"name": "전체 일정 조회 - 도전",
+			"name": "댓글 생성",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\": \"댓글 내용\",\r\n    \"memberId\": 2,\r\n    \"todoId\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:8080/api/todo?page=1&size=5",
+					"raw": "localhost:8080/api/comments",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"api",
-						"todo"
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "댓글 조회(페이징)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/comments/2",
+					"host": [
+						"localhost"
 					],
-					"query": [
-						{
-							"key": "page",
-							"value": "1"
-						},
-						{
-							"key": "size",
-							"value": "5"
+					"port": "8080",
+					"path": [
+						"api",
+						"comments",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "댓글 수정",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\": \"수정된 댓글 내용입니다.\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/comments/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"comments",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "댓글 삭제",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"memberId\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/comments/8",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"comments",
+						"8"
 					]
 				}
 			},
