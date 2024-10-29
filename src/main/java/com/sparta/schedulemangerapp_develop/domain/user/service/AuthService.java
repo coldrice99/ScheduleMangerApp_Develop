@@ -41,4 +41,15 @@ public class AuthService {
         jwtUtil.addJwtToCookie(token, response);
     }
 
+    public void login(AuthRequestDto requestDto, HttpServletResponse response) {
+        Member checkMember = memberRepository.findByEmail(requestDto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("등록된 사용자가 없습니다."));
+
+        if(!passwordEncoder.matches(requestDto.getPassword(), checkMember.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        String token = jwtUtil.createToken(requestDto.getEmail(), checkMember.getRole());
+        jwtUtil.addJwtToCookie(token, response);
+    }
 }

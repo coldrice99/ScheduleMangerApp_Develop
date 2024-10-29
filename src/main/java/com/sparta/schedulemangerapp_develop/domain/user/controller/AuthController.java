@@ -24,4 +24,11 @@ public class AuthController {
         authService.signUp(requestDto, response);
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 완료");
     }
+
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody AuthRequestDto requestDto, HttpServletResponse response) {
+        authService.login(requestDto, response);
+        return ResponseEntity.status(HttpStatus.CREATED).body("로그인 완료");
+    }
 }
