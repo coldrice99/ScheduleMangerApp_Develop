@@ -8,7 +8,6 @@ import com.sparta.schedulemangerapp_develop.domain.user.entity.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -89,4 +88,5 @@ public class TodoController {
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
+
 }
