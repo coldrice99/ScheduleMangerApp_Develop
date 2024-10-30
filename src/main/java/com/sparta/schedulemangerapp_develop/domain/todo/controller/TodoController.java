@@ -68,8 +68,13 @@ public class TodoController {
     //선택 일정 삭제
     @DeleteMapping("/{todoId}")
     public ResponseEntity<Void> deleteTodo(
-            @PathVariable Long todoId
+            @PathVariable Long todoId,
+            HttpServletRequest request
     ){
+        Member member = (Member) request.getAttribute("member");
+        if(member.isUser()){
+            throw new IllegalArgumentException("ADMIN만 삭제 가능합니다.");
+        }
         todoService.deleteTodo(todoId);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
