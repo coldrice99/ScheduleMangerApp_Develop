@@ -17,4 +17,5 @@ public class TodoResponseDto {
     private List<CommentResponseDto> comments;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String weather;
 }

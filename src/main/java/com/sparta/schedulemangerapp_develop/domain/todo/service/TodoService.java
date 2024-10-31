@@ -8,7 +8,7 @@ import com.sparta.schedulemangerapp_develop.domain.todo.entity.Todo;
 import com.sparta.schedulemangerapp_develop.domain.todo.repository.TodoRepository;
 import com.sparta.schedulemangerapp_develop.domain.user.entity.Member;
 import com.sparta.schedulemangerapp_develop.domain.user.repository.MemberRepository;
-import jakarta.validation.Valid;
+import com.sparta.schedulemangerapp_develop.domain.weather.client.WeatherClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,11 +26,15 @@ public class TodoService {
 
     private final TodoRepository todoRepository;
     private final MemberRepository memberRepository;
+    private final WeatherClient weatherClient;
 
     @Transactional
     public TodoResponseDto createTodo(TodoRequestDto requestDto) {
         Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(() -> new IllegalArgumentException("Todo not found with id: " + requestDto.getMemberId()));
-        Todo todo = todoRepository.save(Todo.from(requestDto, member));
+
+        String weather = weatherClient.getTodayWeather();
+
+        Todo todo = todoRepository.save(Todo.from(requestDto, member, weather));
         return todo.to();
     }
 

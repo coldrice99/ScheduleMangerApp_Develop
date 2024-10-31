@@ -36,9 +36,12 @@ public class Todo extends BaseTimeStamp {
             inverseJoinColumns = @JoinColumn(name = "member_id")) // 반대 위치인 User Entity 에서 중간 테이블로 조인할 컬럼 설정
     private List<Member> memberList = new ArrayList<>();
 
-    public static Todo from(TodoRequestDto requestDto, Member member) {
+    private String weather;
+
+    public static Todo from(TodoRequestDto requestDto, Member member, String weather) {
         Todo todo = new Todo();
         todo.initData(requestDto, member);
+        todo.weather = weather;
         return todo;
     }
 
@@ -56,7 +59,8 @@ public class Todo extends BaseTimeStamp {
                 description,
                 comments.stream().map(Comment::to).toList(),
                 getCreatedAt(),
-                getModifiedAt()
+                getModifiedAt(),
+                weather
         );
     }
 
