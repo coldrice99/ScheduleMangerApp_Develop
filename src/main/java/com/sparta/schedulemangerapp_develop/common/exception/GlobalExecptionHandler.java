@@ -1,4 +1,4 @@
-package com.sparta.schedulemangerapp_develop.domain.exception;
+package com.sparta.schedulemangerapp_develop.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

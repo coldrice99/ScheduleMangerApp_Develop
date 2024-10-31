@@ -1,4 +1,4 @@
-package com.sparta.schedulemangerapp_develop.domain.exception;
+package com.sparta.schedulemangerapp_develop.common.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
